@@ -48,4 +48,4 @@ jobs:
         app-name: 'poke-random'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_9122868fd4744453aba4bc8dfdc6e2c4 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_ab8b6b9e2e524d4e95f0d8c1830005da }}/ayamba87/pokemon-random:${{ github.sha }}'
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_ab8b6b9e2e524d4e95f0d8c1830005da }}/pokemon-random:${{ github.sha }}'
