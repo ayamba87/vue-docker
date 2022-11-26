@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_b5372ac9f3c64f519b96e81382474966 }}/ayamba87/pokemon-random:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_b5372ac9f3c64f519b96e81382474966 }}/pokemon-random:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -48,4 +48,4 @@ jobs:
         app-name: 'poke-random'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_02098999980a4592bb7e12c120130852 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_b5372ac9f3c64f519b96e81382474966 }}/ayamba87/pokemon-random:${{ github.sha }}'
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_b5372ac9f3c64f519b96e81382474966 }}/pokemon-random:${{ github.sha }}'
