@@ -1,44 +1,51 @@
-# This is a basic workflow to help you get started with Actions
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: CI
+name: Build and deploy container app to Azure Web App - poke-random
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches:
+      - master
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-latest'
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      -
-        name: Set up Docker
-        uses: docker/setup-buildx-action@v2
-      # Runs a set of commands using the runners shell
-      - name: Login Docker Huub
-        uses: docker/login-action@v2
-        with: 
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_TOKEN}}
-          
+    - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - 
-        name: Build and push the Docker image
-        uses: docker/build-push-action@v3
-        with: 
-          push: true
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/pokemon-random:latest
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Log in to registry
+      uses: docker/login-action@v1
+      with:
+        registry: https://index.docker.io/v1/
+        username: ${{ secrets.AzureAppService_ContainerUsername_ab8b6b9e2e524d4e95f0d8c1830005da }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_a964d583c4d947c8ab77a4840990a130 }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_ab8b6b9e2e524d4e95f0d8c1830005da }}/ayamba87/pokemon-random:${{ github.sha }}
+        file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'poke-random'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_9122868fd4744453aba4bc8dfdc6e2c4 }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_ab8b6b9e2e524d4e95f0d8c1830005da }}/pokemon-random:${{ github.sha }}'
