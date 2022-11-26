@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v1
       with:
         registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_ab8b6b9e2e524d4e95f0d8c1830005da }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_a964d583c4d947c8ab77a4840990a130 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_b5372ac9f3c64f519b96e81382474966 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_b032c02ed2eb41598761f5a5d9b0f308 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_ab8b6b9e2e524d4e95f0d8c1830005da }}/ayamba87/pokemon-random:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_b5372ac9f3c64f519b96e81382474966 }}/ayamba87/pokemon-random:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'poke-random'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_9122868fd4744453aba4bc8dfdc6e2c4 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_ab8b6b9e2e524d4e95f0d8c1830005da }}/pokemon-random:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_02098999980a4592bb7e12c120130852 }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_b5372ac9f3c64f519b96e81382474966 }}/ayamba87/pokemon-random:${{ github.sha }}'
